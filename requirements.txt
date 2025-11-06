@@ -3,8 +3,9 @@ uvicorn
 gunicorn
 pydantic
 agno
-google-generativeai
+google-genai
 duckduckgo-search
 python-dotenv
+
 
 
