@@ -1,6 +1,5 @@
 import os
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from flask import Flask, jsonify, request
 from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.tools.duckduckgo import DuckDuckGoTools
@@ -57,7 +56,6 @@ team_lead = Agent(
 )
 
 # --- HELPER FUNCTIONS ---
-
 def get_meal_plan(age, weight, height, activity_level, dietary_preference, fitness_goal):
     prompt = (
         f"Create a personalized meal plan for a {age}-year-old person, weighing {weight}kg, "
@@ -77,7 +75,7 @@ def get_fitness_plan(age, weight, height, activity_level, fitness_goal):
 def get_full_health_plan(name, age, weight, height, activity_level, dietary_preference, fitness_goal):
     meal_plan = get_meal_plan(age, weight, height, activity_level, dietary_preference, fitness_goal)
     fitness_plan = get_fitness_plan(age, weight, height, activity_level, fitness_goal)
-    
+
     return team_lead.run(
         f"Greet the customer, {name}.\n\n"
         f"User Information: {age} years old, {weight}kg, {height}cm, activity level: {activity_level}.\n\n"
@@ -87,70 +85,61 @@ def get_full_health_plan(name, age, weight, height, activity_level, dietary_pref
         f"Provide a holistic health strategy integrating both plans."
     )
 
-# --- FASTAPI APP ---
-app = FastAPI(
-    title="AI Health & Fitness Planner API",
-    description="Generate personalized meal and workout plans using Gemini AI",
-    version="1.0.0"
-)
+# --- FLASK APP SETUP ---
+app = Flask(__name__)
 
-# --- REQUEST MODELS ---
-class HealthRequest(BaseModel):
-    name: str = "John Doe"
-    age: int
-    weight: float
-    height: float
-    activity_level: str
-    dietary_preference: str = "Balanced"
-    fitness_goal: str
-
-# --- ENDPOINTS ---
-
-@app.get("/")
+@app.route("/", methods=["GET"])
 def home():
-    return {"message": "Welcome to AI Health & Fitness Planner API 💪"}
+    return jsonify({"message": "Welcome to AI Health & Fitness Planner API 💪"})
 
-@app.post("/meal-plan")
-def meal_plan(request: HealthRequest):
+@app.route("/meal-plan", methods=["POST"])
+def meal_plan():
+    data = request.get_json()
     try:
         response = get_meal_plan(
-            request.age,
-            request.weight,
-            request.height,
-            request.activity_level,
-            request.dietary_preference,
-            request.fitness_goal,
+            data.get("age"),
+            data.get("weight"),
+            data.get("height"),
+            data.get("activity_level"),
+            data.get("dietary_preference", "Balanced"),
+            data.get("fitness_goal"),
         )
-        return {"meal_plan": response.content}
+        return jsonify({"meal_plan": response.content})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return jsonify({"error": str(e)}), 500
 
-@app.post("/fitness-plan")
-def fitness_plan(request: HealthRequest):
+@app.route("/fitness-plan", methods=["POST"])
+def fitness_plan():
+    data = request.get_json()
     try:
         response = get_fitness_plan(
-            request.age,
-            request.weight,
-            request.height,
-            request.activity_level,
-            request.fitness_goal,
+            data.get("age"),
+            data.get("weight"),
+            data.get("height"),
+            data.get("activity_level"),
+            data.get("fitness_goal"),
         )
-        return {"fitness_plan": response.content}
+        return jsonify({"fitness_plan": response.content})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return jsonify({"error": str(e)}), 500
 
-@app.post("/full-health-plan")
-def full_health_plan(request: HealthRequest):
+@app.route("/full-health-plan", methods=["POST"])
+def full_health_plan():
+    data = request.get_json()
     try:
         response = get_full_health_plan(
-            request.name,
-            request.age,
-            request.weight,
-            request.height,
-            request.activity_level,
-            request.dietary_preference,
-            request.fitness_goal,
+            data.get("name", "John Doe"),
+            data.get("age"),
+            data.get("weight"),
+            data.get("height"),
+            data.get("activity_level"),
+            data.get("dietary_preference", "Balanced"),
+            data.get("fitness_goal"),
         )
-        return {"full_health_plan": response.content}
+        return jsonify({"full_health_plan": response.content})
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return jsonify({"error": str(e)}), 500
+
+# --- RUN LOCALLY ---
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000)
