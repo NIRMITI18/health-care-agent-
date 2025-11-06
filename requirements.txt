@@ -1,12 +1,10 @@
 fastapi
 uvicorn
-phidata
+gunicorn
+pydantic
+agno
 google-generativeai
 duckduckgo-search
 python-dotenv
-pypdf
-sqlalchemy
-pgvector
-psycopg[binary]
-gunicorn
-agno
+
+
