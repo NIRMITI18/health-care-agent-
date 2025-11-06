@@ -6,7 +6,6 @@ agno
 google-genai
 ddgs
 python-dotenv
-
-
+flask
 
 
