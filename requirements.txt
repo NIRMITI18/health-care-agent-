@@ -3,10 +3,10 @@ uvicorn
 phidata
 google-generativeai
 duckduckgo-search
-yfinance
 python-dotenv
 pypdf
 sqlalchemy
 pgvector
 psycopg[binary]
 gunicorn
+agno
