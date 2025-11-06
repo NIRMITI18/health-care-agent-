@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.tools.duckduckgo import DuckDuckGoTools
@@ -90,7 +90,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({"message": "Welcome to AI Health & Fitness Planner API 💪"})
+    return render_template("index.html")
 
 @app.route("/meal-plan", methods=["POST"])
 def meal_plan():
