@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}Home - AI Health & Fitness Planner{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h2>Welcome to Your Personal Health & Fitness Assistant</h2>
+    <p>Get personalized meal plans, workout routines, and comprehensive health strategies powered by AI.</p>
+</div>
+
+<div class="services">
+    <div class="service-card">
+        <div class="service-icon">🍽️</div>
+        <h3>Meal Plan</h3>
+        <p>Get a personalized dietary plan tailored to your needs</p>
+        <button onclick="showForm('meal')" class="btn btn-primary">Get Meal Plan</button>
+    </div>
+
+    <div class="service-card">
+        <div class="service-icon">🏋️</div>
+        <h3>Fitness Plan</h3>
+        <p>Receive a customized workout routine for your goals</p>
+        <button onclick="showForm('fitness')" class="btn btn-primary">Get Fitness Plan</button>
+    </div>
+
+    <div class="service-card">
+        <div class="service-icon">🌟</div>
+        <h3>Full Health Plan</h3>
+        <p>Complete holistic health strategy combining diet and fitness</p>
+        <button onclick="showForm('full')" class="btn btn-primary">Get Full Plan</button>
+    </div>
+</div>
+
+<!-- Meal Plan Form -->
+<div id="meal-form" class="form-container" style="display: none;">
+    <h2>Get Your Meal Plan</h2>
+    <form action="/meal-plan" method="POST" onsubmit="submitForm(event, 'meal-plan')">
+        <div class="form-group">
+            <label for="meal-age">Age:</label>
+            <input type="number" id="meal-age" name="age" required>
+        </div>
+        <div class="form-group">
+            <label for="meal-weight">Weight (kg):</label>
+            <input type="number" id="meal-weight" name="weight" step="0.1" required>
+        </div>
+        <div class="form-group">
+            <label for="meal-height">Height (cm):</label>
+            <input type="number" id="meal-height" name="height" required>
+        </div>
+        <div class="form-group">
+            <label for="meal-activity">Activity Level:</label>
+            <select id="meal-activity" name="activity_level" required>
+                <option value="Sedentary">Sedentary</option>
+                <option value="Lightly Active">Lightly Active</option>
+                <option value="Moderately Active">Moderately Active</option>
+                <option value="Very Active">Very Active</option>
+                <option value="Extremely Active">Extremely Active</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="meal-preference">Dietary Preference:</label>
+            <select id="meal-preference" name="dietary_preference">
+                <option value="Balanced">Balanced</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Vegan">Vegan</option>
+                <option value="Keto">Keto</option>
+                <option value="Low Carb">Low Carb</option>
+                <option value="Mediterranean">Mediterranean</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="meal-goal">Fitness Goal:</label>
+            <input type="text" id="meal-goal" name="fitness_goal" placeholder="e.g., Weight loss, Muscle gain" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Generate Meal Plan</button>
+            <button type="button" onclick="hideForm('meal')" class="btn btn-secondary">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<!-- Fitness Plan Form -->
+<div id="fitness-form" class="form-container" style="display: none;">
+    <h2>Get Your Fitness Plan</h2>
+    <form action="/fitness-plan" method="POST" onsubmit="submitForm(event, 'fitness-plan')">
+        <div class="form-group">
+            <label for="fitness-age">Age:</label>
+            <input type="number" id="fitness-age" name="age" required>
+        </div>
+        <div class="form-group">
+            <label for="fitness-weight">Weight (kg):</label>
+            <input type="number" id="fitness-weight" name="weight" step="0.1" required>
+        </div>
+        <div class="form-group">
+            <label for="fitness-height">Height (cm):</label>
+            <input type="number" id="fitness-height" name="height" required>
+        </div>
+        <div class="form-group">
+            <label for="fitness-activity">Activity Level:</label>
+            <select id="fitness-activity" name="activity_level" required>
+                <option value="Sedentary">Sedentary</option>
+                <option value="Lightly Active">Lightly Active</option>
+                <option value="Moderately Active">Moderately Active</option>
+                <option value="Very Active">Very Active</option>
+                <option value="Extremely Active">Extremely Active</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="fitness-goal">Fitness Goal:</label>
+            <input type="text" id="fitness-goal" name="fitness_goal" placeholder="e.g., Weight loss, Muscle gain, Endurance" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Generate Fitness Plan</button>
+            <button type="button" onclick="hideForm('fitness')" class="btn btn-secondary">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<!-- Full Health Plan Form -->
+<div id="full-form" class="form-container" style="display: none;">
+    <h2>Get Your Full Health Plan</h2>
+    <form action="/full-health-plan" method="POST" onsubmit="submitForm(event, 'full-health-plan')">
+        <div class="form-group">
+            <label for="full-name">Name:</label>
+            <input type="text" id="full-name" name="name" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+            <label for="full-age">Age:</label>
+            <input type="number" id="full-age" name="age" required>
+        </div>
+        <div class="form-group">
+            <label for="full-weight">Weight (kg):</label>
+            <input type="number" id="full-weight" name="weight" step="0.1" required>
+        </div>
+        <div class="form-group">
+            <label for="full-height">Height (cm):</label>
+            <input type="number" id="full-height" name="height" required>
+        </div>
+        <div class="form-group">
+            <label for="full-activity">Activity Level:</label>
+            <select id="full-activity" name="activity_level" required>
+                <option value="Sedentary">Sedentary</option>
+                <option value="Lightly Active">Lightly Active</option>
+                <option value="Moderately Active">Moderately Active</option>
+                <option value="Very Active">Very Active</option>
+                <option value="Extremely Active">Extremely Active</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="full-preference">Dietary Preference:</label>
+            <select id="full-preference" name="dietary_preference">
+                <option value="Balanced">Balanced</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Vegan">Vegan</option>
+                <option value="Keto">Keto</option>
+                <option value="Low Carb">Low Carb</option>
+                <option value="Mediterranean">Mediterranean</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="full-goal">Fitness Goal:</label>
+            <input type="text" id="full-goal" name="fitness_goal" placeholder="e.g., Weight loss, Muscle gain" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Generate Full Health Plan</button>
+            <button type="button" onclick="hideForm('full')" class="btn btn-secondary">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loading" class="loading-overlay" style="display: none;">
+    <div class="loading-spinner"></div>
+    <p>Generating your personalized plan...</p>
+</div>
+
+<!-- Result Container -->
+<div id="result-container" class="result-container" style="display: none;">
+    <button onclick="closeResult()" class="btn-close">×</button>
+    <div id="result-content"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showForm(type) {
+    // Hide all forms
+    document.getElementById('meal-form').style.display = 'none';
+    document.getElementById('fitness-form').style.display = 'none';
+    document.getElementById('full-form').style.display = 'none';
+    
+    // Show selected form
+    if (type === 'meal') {
+        document.getElementById('meal-form').style.display = 'block';
+    } else if (type === 'fitness') {
+        document.getElementById('fitness-form').style.display = 'block';
+    } else if (type === 'full') {
+        document.getElementById('full-form').style.display = 'block';
+    }
+    
+    // Scroll to form
+    document.getElementById(type + '-form').scrollIntoView({ behavior: 'smooth' });
+}
+
+function hideForm(type) {
+    document.getElementById(type + '-form').style.display = 'none';
+}
+
+function submitForm(event, endpoint) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    // Convert numeric fields
+    if (data.age) data.age = parseInt(data.age);
+    if (data.weight) data.weight = parseFloat(data.weight);
+    if (data.height) data.height = parseInt(data.height);
+    
+    // Show loading
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('result-container').style.display = 'none';
+    
+    fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('loading').style.display = 'none';
+        
+        if (data.error) {
+            showResult('<div class="error">Error: ' + data.error + '</div>');
+        } else {
+            const content = data.meal_plan || data.fitness_plan || data.full_health_plan || '';
+            showResult(content);
+        }
+    })
+    .catch(error => {
+        document.getElementById('loading').style.display = 'none';
+        showResult('<div class="error">Error: ' + error.message + '</div>');
+    });
+}
+
+function showResult(content) {
+    const resultContent = document.getElementById('result-content');
+    resultContent.innerHTML = '<div class="result-content">' + content + '</div>';
+    document.getElementById('result-container').style.display = 'block';
+    document.getElementById('result-container').scrollIntoView({ behavior: 'smooth' });
+}
+
+function closeResult() {
+    document.getElementById('result-container').style.display = 'none';
+}
+</script>
+{% endblock %}
+
