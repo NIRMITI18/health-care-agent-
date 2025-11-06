@@ -9,3 +9,4 @@ pypdf
 sqlalchemy
 pgvector
 psycopg[binary]
+gunicorn
